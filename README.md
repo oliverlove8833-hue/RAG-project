@@ -1,2 +1,1 @@
-# RAG-project
-SMU-AI project
+# 노동자 근로기준법 안내 도우미
