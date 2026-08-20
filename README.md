@@ -115,23 +115,7 @@ questions = [
 ]
 ```
 
-## 5. 기술 스택
-
-| 구분 | 사용 기술 |
-|---|---|
-| PDF 파싱 | PyMuPDF (`fitz`) |
-| 청킹 | LangChain `RecursiveCharacterTextSplitter` (400 / 50) |
-| 임베딩 | OpenAI `text-embedding-3-large` (3072차원) |
-| 벡터 DB | Qdrant Cloud (Cosine) |
-| 검색 | Parent Document Retriever (직접 구현) |
-| 관계형 DB | Supabase (PostgreSQL) |
-| Text2SQL | LangChain `SQLDatabase` |
-| LLM | `gpt-5.4-mini` |
-| 카테고리 분류 | Pydantic Structured Output |
-
----
-
-## PDF + DB 활용 방안 확장
+## 5. PDF + DB 활용 방안 확장
 
 
 
