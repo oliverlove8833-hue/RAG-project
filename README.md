@@ -1,7 +1,7 @@
 # 노동자 근로기준법 안내 도우미
 
-> 상명 AI Training · 팀 프로젝트 1 (2·3일차)
-> RAG · Text2SQL 기반 데이터 조회 시스템
+> 상명 AI Training · 팀 프로젝트 1 (2·3·4일차)
+> RAG · Text2SQL · LangGraph 기반 데이터 조회 에이전트
 
 법을 잘 모르는 노동자가 일상적인 말로 물어보면, 고용노동부 공식 가이드북에서 근거를 찾아 쉬운 말로 답해주는 상담 도우미입니다.
 
@@ -68,7 +68,7 @@ categories (17행)  ──<  topics (37행)  ──<  forms (22행)
 | `topics` | 절 단위 항목과 소관 부서 | `topic_id`, `category_id`, `topic_code`, `page_start`, `related_law`, `dept_name`, `dept_phone` |
 | `forms` | 표준근로계약서 등 서식 목록 | `form_id`, `form_name`, `related_topic_code`, `page`, `form_type` |
 
-categories → topics → forms`로 이어지는 외래키 구조라 JOIN 질의가 가능합니다. 문서와 테이블이 **같은 페이지 번호 체계**를 공유하므로, SQL로 찾은 쪽수를 RAG 검색에 그대로 넘길 수 있습니다.
+`categories → topics → forms`로 이어지는 외래키 구조라 JOIN 질의가 가능합니다. 문서와 테이블이 **같은 페이지 번호 체계**를 공유하므로, SQL로 찾은 쪽수를 RAG 검색에 그대로 넘길 수 있습니다.
 
 ---
 
@@ -122,6 +122,29 @@ PDF의 설명만으로 해결하기 어렵거나 추가적인 도움이 필요�
   - **PDF** → 임금체불에 대한 설명과 대응 방법 제공
   - **DB** → 관련 담당 기관, 전화번호, 주소 등의 정보 제공
 
+---
 
+## 5. LangGraph 에이전트 워크플로우 — 4일차
+
+4장에서 설계한 분기를 LangGraph 그래프로 구현했습니다. 질문 의도를 분류해 **PDF 경로 / DB 경로 / 두 경로 병렬** 중 하나를 자동으로 선택합니다.
+
+### 5-1. 의도 분류
+
+`classify_intent` 노드가 질문을 4가지로 나눕니다. 4장의 활용 방안과 1:1로 대응합니다.
+
+| intent | 대응 | 질문 예시 |
+|---|---|---|
+| `general` | — | "안녕하세요", "뭘 할 수 있어?" |
+| `labor_consult` | 4-1 PDF | "주휴수당 받는 조건이 뭐야?" |
+| `database` | 4-2 DB | "표준근로계약서 서식은 몇 쪽에 있어?" |
+| `hybrid` | 4-3 PDF + DB | "알바비를 못 받았는데 어떻게 하고 어디 문의해?" |
+
+### 5-2. 그래프 구조
+
+![LangGraph 워크플로우](langgraph_workflow.png)
+
+`classify_intent`에서 4갈래로 나뉘고, 어느 경로를 타든 `combine_context → generate_answer → validate_answer`로 합류합니다. PDF 경로(초록)와 DB 경로(빨강)는 각자 검증 단계를 두고 실패 시 재시도하며, `hybrid`는 두 경로를 동시에 실행한 뒤 문맥을 합칩니다.
+
+---
 
 상명대학교 상명 AI Training (2026.08.18 ~ 08.31)
