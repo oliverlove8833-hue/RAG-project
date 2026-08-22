@@ -73,9 +73,3 @@ questions = [
 ### 5-2. 그래프 구조
 
 ![LangGraph 워크플로우](langgraph_workflow.png)
-
-`classify_intent`에서 4갈래로 나뉘고, 어느 경로를 타든 `combine_context → generate_answer → validate_answer`로 합류합니다. PDF 경로(초록)와 DB 경로(빨강)는 각자 검증 단계를 두고 실패 시 재시도하며, `hybrid`는 두 경로를 동시에 실행한 뒤 문맥을 합칩니다.
-
----
-
-상명대학교 상명 AI Training (2026.08.18 ~ 08.31)
