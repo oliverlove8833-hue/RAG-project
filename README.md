@@ -31,10 +31,6 @@
 | `topics` | 절 단위 항목과 소관 부서 | `topic_id`, `category_id`, `topic_code`, `page_start`, `related_law`, `dept_name`, `dept_phone` |
 | `forms` | 표준근로계약서 등 서식 목록 | `form_id`, `form_name`, `related_topic_code`, `page`, `form_type` |
 
-`categories → topics → forms`로 이어지는 외래키 구조라 JOIN 질의가 가능합니다. 문서와 테이블이 **같은 페이지 번호 체계**를 공유하므로, SQL로 찾은 쪽수를 RAG 검색에 그대로 넘길 수 있습니다.
-
----
-
 ### 테스트 질문
 
 ```python
