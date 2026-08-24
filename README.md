@@ -43,8 +43,8 @@ questions = [
 ```
 ---
 
-## Day4 - RAG·Text2SQL 기반 데이터 조회 시스템
-### 주제 : IOT 디바이스 하드웨어·보안 통합 점검 
+## Day4 - 데이터 검색 기반 정보 제공(RAG) 에이전트 시스템 개발
+### 주제 : IoT 디바이스 보안 점검 도우미
 
 4장에서 설계한 분기를 LangGraph 그래프로 구현했습니다. 질문 의도를 분류해 **PDF 경로 / DB 경로 / 두 경로 병렬** 중 하나를 자동으로 선택합니다.
 
@@ -69,3 +69,47 @@ questions = [
 ### 5-2. 그래프 구조
 
 ![LangGraph 워크플로우](/docs/langgraph_workflow.png)
+
+---
+
+## Day5 - 사용자의 입력을 받고 답변을 반환할 데모 웹앱 제작
+### 주제 : IoT 디바이스 보안 점검 도우미
+![IoT Demo](/docs/IoT.png)
+
+### 에이전트 목적
+웹캠·공유기·스마트 도어락 등 IoT 기기의 이상 증상을 분석하고, 공식 보안 문서를 근거로 점검 방법·초기 대응·신고 기관을 안내합니다
+
+### RAG에 사용한 PDF 문서
+KISA 등 공공기관의 IoT 보안 가이드 3종을 사용했습니다.
+- IoT_공통보안가이드.pdf: IoT 공통 위협과 보안 점검
+- KISA_홈가전IoT보안가이드.pdf: 가정용 IoT 기기별 보안 수칙
+- 사물인터넷 환경 암호·인증기술 이용 안내서.pdf: 암호화와 인증 적용 기준
+
+### Text2SQL에 사용한 CSV 문서
+공식 IoT 보안 가이드, MCU 기술 문서, 신고기관 정보를 구조화한 CSV 6개·총 88행을 사용했습니다.
+1. 1_parent_iot_common_guidelines.csv — IoT 공통 보안원칙 15개
+2. 2_child_home_iot_controls.csv — 홈·가전 IoT 보안통제 18개
+3. 3_child_stm32_debug_topics.csv — STM32 디버깅·인터페이스 항목 14개
+4. 4_child_esp32h2_features.csv — ESP32-H2 하드웨어·보안 기능 26개
+5. iot_security_agencies_parent.csv — KISA·경찰청 신고기관 3곳
+6. iot_security_incidents_child.csv — 사고 유형·증상·대응 방법 12개
+
+### LangGraph 기반 전체 구조
+질문 분석 → 의도 분류 → 도구 실행 → 결과 검증 → 답변 생성 구조입니다.
+- 일반 질문: LLM 직접 답변
+- 보안 지식 질문: Qdrant RAG 검색
+- 신고·통계 질문: Text2SQL 조회
+- 복합 질문: RAG와 Text2SQL 병렬 실행
+- 검색 결과가 부족하거나 DB 결과가 잘못되면 재검색·재실행
+- 최종적으로 두 결과를 통합해 근거가 포함된 답변 생성
+
+### 예시 질문
+- 웹캠이 혼자 움직이고 모르는 접속 기록이 있는데 어떻게 점검해야 하나요? -> RAG 
+- 공유기에 모르는 기기가 연결됐을 때 바로 해야 할 조치는 무엇인가요? -> RAG
+- IoT 해킹 신고 기관은 총 몇 곳이고 전화번호는 무엇인가요? -> Text2SQL
+- IoT 해킹으로 금전 피해가 발생하면 어디에 신고해야 하나요? -> Text2SQL
+- 홈캠 영상 유출이 의심돼요. 지금 해야 할 조치와 신고 기관·연락처를 함께 알려주세요. -> RAG + Text2SQL 하이브리드
+
+
+
+
