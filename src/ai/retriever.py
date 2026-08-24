@@ -16,7 +16,7 @@ from langchain_core.documents import Document
 # 실제 Qdrant 적재 시 사용한 컬렉션명과 반드시 같아야 함
 COLLECTION_NAME = os.getenv(
     "QDRANT_COLLECTION_NAME",
-    "IoT_하드웨어_보안_통합점검"
+    "iot_hardware_security_agent"
 )
 
 
