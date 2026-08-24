@@ -68,4 +68,4 @@ questions = [
 ```
 ### 5-2. 그래프 구조
 
-![LangGraph 워크플로우](langgraph_workflow.png)
+![LangGraph 워크플로우](/docs/langgraph_workflow.png)
