@@ -80,13 +80,13 @@ questions = [
 웹캠·공유기·스마트 도어락 등 IoT 기기의 이상 증상을 분석하고, 공식 보안 문서를 근거로 점검 방법·초기 대응·신고 기관을 안내합니다
 
 ### 2. RAG에 사용한 PDF 문서
-KISA 등 공공기관의 IoT 보안 가이드 3종을 사용했습니다.
+IoT 공통 보안, 홈·가전 IoT 보안, 암호·인증 기술에 관한 PDF 3종을 Qdrant에서 검색합니다.
 - IoT_공통보안가이드.pdf: IoT 공통 위협과 보안 점검
 - KISA_홈가전IoT보안가이드.pdf: 가정용 IoT 기기별 보안 수칙
 - 사물인터넷 환경 암호·인증기술 이용 안내서.pdf: 암호화와 인증 적용 기준
 
 ### 3. Text2SQL에 사용한 CSV 문서
-공식 IoT 보안 가이드, MCU 기술 문서, 신고기관 정보를 구조화한 CSV 6개·총 88행을 사용했습니다.
+IoT 보안원칙, 홈·가전 보안통제, STM32, ESP32-H2, 신고기관, 사고 유형을 정리한 CSV 6개(총 88행)를 Supabase에서 조회합니다.
 1. 1_parent_iot_common_guidelines.csv — IoT 공통 보안원칙 15개
 2. 2_child_home_iot_controls.csv — 홈·가전 IoT 보안통제 18개
 3. 3_child_stm32_debug_topics.csv — STM32 디버깅·인터페이스 항목 14개
@@ -95,7 +95,7 @@ KISA 등 공공기관의 IoT 보안 가이드 3종을 사용했습니다.
 6. iot_security_incidents_child.csv — 사고 유형·증상·대응 방법 12개
 
 ### 4. LangGraph 기반 전체 구조
-질문 분석 → 의도 분류 → 도구 실행 → 결과 검증 → 답변 생성 구조입니다.
+질문을 일반·RAG·Text2SQL·하이브리드로 분류합니다. 하이브리드는 RAG와 Text2SQL을 병렬 실행하고, 결과를 통합·검증하여 근거 있는 답변을 생성합니다.
 - 일반 질문: LLM 직접 답변
 - 보안 지식 질문: Qdrant RAG 검색
 - 신고·통계 질문: Text2SQL 조회
